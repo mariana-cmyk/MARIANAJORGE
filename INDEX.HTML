@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JM Veículos - Dashboard G30 (Preto, Laranja & Branco)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        g30: {
+                            orange: '#FF5500',
+                            orangeHover: '#E04B00',
+                            orangeLight: '#FF7733',
+                            black: '#0A0A0A',
+                            darkBg: '#121212',
+                            cardBg: '#1A1A1A',
+                            border: '#2A2A2A',
+                            borderLight: '#3A3A3A'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0A;
+            color: #FFFFFF;
+        }
+        /* Custom Scrollbar G30 style */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A0A0A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2A2A2A;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF5500;
+        }
+    </style>
+</head>
+<body class="bg-g30-black text-white min-h-screen flex flex-col antialiased selection:bg-g30-orange selection:text-white">
+
+    <!-- Header/Navbar -->
+    <header class="sticky top-0 z-30 bg-black/90 backdrop-blur-md border-b border-g30-border shadow-2xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo & Branding G30 -->
+                <div class="flex items-center space-x-3.5">
+                    <div class="bg-gradient-to-tr from-g30-orange to-amber-500 p-2.5 rounded-xl shadow-lg shadow-g30-orange/20 ring-1 ring-g30-orangeLight/30">
+                        <i data-lucide="car" class="w-7 h-7 text-black font-extrabold"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-2xl font-black tracking-tight text-white">
+                                JM <span class="text-g30-orange">VEÍCULOS</span>
+                            </span>
+                            <span class="bg-g30-orange/10 text-g30-orange border border-g30-orange/30 text-[11px] px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1.5 uppercase tracking-wider">
+                                <span class="w-2 h-2 rounded-full bg-g30-orange animate-pulse"></span>
+                                PADRÃO G30
+                            </span>
+                        </div>
+                        <p class="text-xs text-neutral-400 font-medium tracking-wide">Gestão e Estoque Exclusivo</p>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="flex items-center space-x-3">
+                    <button onclick="openFinanceModal()" class="hidden sm:flex items-center space-x-2 bg-g30-cardBg hover:bg-neutral-800 text-white border border-g30-border hover:border-g30-orange/50 font-semibold text-sm px-4 py-2.5 rounded-xl transition-all shadow-md">
+                        <i data-lucide="calculator" class="w-4 h-4 text-g30-orange"></i>
+                        <span>Simular Financiamento</span>
+                    </button>
+                    <a href="https://wa.me/5511999999999?text=Ol%C3%A1%2C%20gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20estoque%20da%20JM%20Ve%C3%ADculos" target="_blank" class="flex items-center space-x-2 bg-g30-orange hover:bg-g30-orangeHover text-white font-bold text-sm px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-g30-orange/20 active:scale-95">
+                        <i data-lucide="message-circle" class="w-4 h-4 text-white"></i>
+                        <span class="hidden md:inline">Atendimento WhatsApp</span>
+                        <span class="md:hidden">WhatsApp</span>
+                    </a>
+                </div>a
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- KPI Metrics Grid -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <!-- Metric Card 1: Total Stock -->
+            <div class="bg-g30-darkBg border border-g30-border rounded-2xl p-5 hover:border-g30-orange/60 transition-all duration-300 relative overflow-hidden group">
+                <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                    <i data-lucide="car" class="w-32 h-32 text-g30-orange"></i>
+                </div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-neutral-400">Veículos em Estoque</p>
+                        <h3 class="text-3xl font-black text-white mt-1" id="kpiTotalVehicles">5</h3>
+                    </div>
+                    <div class="p-3 bg-g30-orange/10 border border-g30-orange/20 text-g30-orange rounded-xl">
+                        <i data-lucide="car" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-xs text-neutral-400">
+                    <span class="text-g30-orange font-bold flex items-center mr-1.5">
+                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5 mr-1"></i> 100%
+                    </span>
+                    disponíveis para venda imediata
+                </div>
+            </div>
+
+            <!-- Metric Card 2: Total Value -->
+            <div class="bg-g30-darkBg border border-g30-border rounded-2xl p-5 hover:border-g30-orange/60 transition-all duration-300 relative overflow-hidden group">
+                <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                    <i data-lucide="circle-dollar-sign" class="w-32 h-32 text-white"></i>
+                </div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-neutral-400">Valor Total do Estoque</p>
+                        <h3 class="text-2xl lg:text-3xl font-black text-g30-orange mt-1" id="kpiTotalValue">R$ 430.500,00</h3>
+                    </div>
+                    <div class="p-3 bg-white/10 border border-white/20 text-white rounded-xl">
+                        <i data-lucide="dollar-sign" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-xs text-neutral-400">
+                    <i data-lucide="trending-up" class="w-3.5 h-3.5 text-g30-orange mr-1"></i>
+                    Soma do inventário cadastrado
+                </div>
+            </div>
+
+            <!-- Metric Card 3: Average Price -->
+            <div class="bg-g30-darkBg border border-g30-border rounded-2xl p-5 hover:border-g30-orange/60 transition-all duration-300 relative overflow-hidden group">
+                <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                    <i data-lucide="calculator" class="w-32 h-32 text-g30-orange"></i>
+                </div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-neutral-400">Média de Preço</p>
+                        <h3 class="text-2xl lg:text-3xl font-black text-white mt-1" id="kpiAvgValue">R$ 86.100,00</h3>
+                    </div>
+                    <div class="p-3 bg-g30-orange/10 border border-g30-orange/20 text-g30-orange rounded-xl">
+                        <i data-lucide="calculator" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-xs text-neutral-400">
+                    <span class="text-neutral-200 font-semibold">Ticket médio</span> por unidade em loja
+                </div>
+            </div>
+
+            <!-- Metric Card 4: Price Extremes -->
+            <div class="bg-g30-darkBg border border-g30-border rounded-2xl p-5 hover:border-g30-orange/60 transition-all duration-300 relative overflow-hidden group">
+                <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                    <i data-lucide="arrow-up-down" class="w-32 h-32 text-neutral-500"></i>
+                </div>
+                <div class="flex justify-between items-start">
+                    <div class="w-full pr-2">
+                        <p class="text-xs font-bold uppercase tracking-wider text-neutral-400">Amplitude de Preços</p>
+                        <div class="mt-2 space-y-1">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-neutral-400 truncate max-w-[110px]" title="Mercedes-Benz E 250">Maior: Mercedes E250</span>
+                                <span class="text-g30-orange font-extrabold">R$ 135.5k</span>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span class="text-neutral-400 truncate max-w-[110px]" title="Dodge Journey">Menor: Dodge Journey</span>
+                                <span class="text-white font-extrabold">R$ 36.0k</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-white/10 border border-white/20 text-white rounded-xl">
+                        <i data-lucide="arrow-up-right" class="w-6 h-6 text-g30-orange"></i>
+                    </div>
+                </div>
+                <div class="mt-3 pt-2 border-t border-g30-border flex items-center justify-between text-[11px] text-neutral-400">
+                    <span>Variação total</span>
+                    <span class="font-extrabold text-white">R$ 99.500,00</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Grid -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Chart 1: Price Comparison (Bar Chart) -->
+            <div class="lg:col-span-2 bg-g30-darkBg border border-g30-border rounded-2xl p-6 flex flex-col justify-between">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+                    <div>
+                        <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+                            <i data-lucide="bar-chart-3" class="w-5 h-5 text-g30-orange"></i>
+                            Comparativo de Preço dos Veículos
+                        </h3>
+                        <p class="text-xs text-neutral-400">Valores anunciados no padrão G30 em ordem decrescente (R$)</p>
+                    </div>
+                    <span class="text-xs bg-black text-g30-orange font-bold px-3 py-1 rounded-lg border border-g30-orange/30 self-start sm:self-auto">
+                        5 Veículos
+                    </span>
+                </div>
+                <div class="relative w-full h-[280px] sm:h-[320px]">
+                    <canvas id="priceBarChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 2: Fuel Distribution (Doughnut Chart) -->
+            <div class="bg-g30-darkBg border border-g30-border rounded-2xl p-6 flex flex-col justify-between">
+                <div class="mb-4">
+                    <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+                        <i data-lucide="pie-chart" class="w-5 h-5 text-g30-orange"></i>
+                        Distribuição por Combustível
+                    </h3>
+                    <p class="text-xs text-neutral-400">Tipos de motorização no estoque</p>
+                </div>
+                <div class="relative w-full h-[240px] flex items-center justify-center my-auto">
+                    <canvas id="fuelDoughnutChart"></canvas>
+                </div>
+                <div class="mt-4 pt-4 border-t border-g30-border text-xs flex justify-around text-neutral-300 font-medium">
+                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-g30-orange"></span> Gasolina (3)</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-white"></span> Diesel (1)</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-neutral-600"></span> Flex (1)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Inventory Section -->
+        <section class="bg-g30-darkBg border border-g30-border rounded-2xl p-6 space-y-6">
+            <!-- Header Controls -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-xl font-black text-white flex items-center gap-2">
+                        <i data-lucide="layout-grid" class="w-5 h-5 text-g30-orange"></i>
+                        Inventário JM Veículos
+                    </h2>
+                    <p class="text-xs text-neutral-400">Filtre e explore todos os detalhes dos veículos disponíveis</p>
+                </div>
+
+                <!-- Filters & Search -->
+                <div class="flex flex-wrap items-center gap-3">
+                    <!-- Search Input -->
+                    <div class="relative flex-1 sm:w-64">
+                        <i data-lucide="search" class="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" id="searchInput" placeholder="Buscar por marca, modelo..." 
+                            class="w-full pl-9 pr-4 py-2 bg-black border border-g30-border rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-g30-orange transition-colors">
+                    </div>
+
+                    <!-- Filter Fuel -->
+                    <select id="fuelFilter" class="bg-black border border-g30-border text-xs text-neutral-200 rounded-xl px-3 py-2 focus:outline-none focus:border-g30-orange">
+                        <option value="ALL">Todos Combustíveis</option>
+                        <option value="Gasolina">Gasolina</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Flex">Flex</option>
+                    </select>
+
+                    <!-- Filter Transmission -->
+                    <select id="gearFilter" class="bg-black border border-g30-border text-xs text-neutral-200 rounded-xl px-3 py-2 focus:outline-none focus:border-g30-orange">
+                        <option value="ALL">Todos Câmbios</option>
+                        <option value="AUTOMATICO">Automático</option>
+                        <option value="MANUAL">Manual</option>
+                    </select>
+
+                    <!-- Sort Price -->
+                    <select id="sortFilter" class="bg-black border border-g30-border text-xs text-neutral-200 rounded-xl px-3 py-2 focus:outline-none focus:border-g30-orange">
+                        <option value="DEFAULT">Ordenar: Padrão</option>
+                        <option value="PRICE_DESC">Maior Preço</option>
+                        <option value="PRICE_ASC">Menor Preço</option>
+                    </select>
+
+                    <!-- View Toggle -->
+                    <div class="flex items-center bg-black p-1 border border-g30-border rounded-xl space-x-1">
+                        <button id="btnGridView" onclick="setModeView('grid')" class="p-1.5 rounded-lg bg-g30-orange text-black font-bold transition">
+                            <i data-lucide="grid" class="w-4 h-4"></i>
+                        </button>
+                        <button id="btnTableView" onclick="setModeView('table')" class="p-1.5 rounded-lg text-neutral-400 hover:text-white transition">
+                            <i data-lucide="list" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Container View -->
+            <div id="vehiclesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Dynamic Content Generated via JS -->
+            </div>
+
+            <!-- Table Container View (Hidden by default) -->
+            <div id="vehiclesTableWrapper" class="hidden overflow-x-auto border border-g30-border rounded-xl">
+                <table class="w-full text-left text-xs text-neutral-200">
+                    <thead class="bg-black text-neutral-400 uppercase font-bold border-b border-g30-border">
+                        <tr>
+                            <th class="p-4">Veículo</th>
+                            <th class="p-4">Motor / Versão</th>
+                            <th class="p-4">Combustível</th>
+                            <th class="p-4">Câmbio</th>
+                            <th class="p-4 text-right">Valor Anunciado</th>
+                            <th class="p-4 text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vehiclesTableBody" class="divide-y divide-g30-border/60 bg-black/40">
+                        <!-- Dynamic Content Generated via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden text-center py-12 space-y-3">
+                <div class="inline-flex p-4 rounded-full bg-g30-cardBg text-g30-orange border border-g30-border">
+                    <i data-lucide="search-x" class="w-8 h-8"></i>
+                </div>
+                <h4 class="text-base font-bold text-white">Nenhum veículo encontrado</h4>
+                <p class="text-xs text-neutral-400">Tente ajustar seus termos de busca ou filtros aplicados.</p>
+                <button onclick="resetFilters()" class="text-xs text-g30-orange font-bold hover:underline">Limpar Filtros</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Finance Calculator Modal -->
+    <div id="financeModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-g30-darkBg border border-g30-orange/40 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="modalCard">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center px-6 py-4 border-b border-g30-border bg-black">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="calculator" class="w-5 h-5 text-g30-orange"></i>
+                    <h3 class="font-extrabold text-white text-base">Simulador de Financiamento G30</h3>
+                </div>
+                <button onclick="closeFinanceModal()" class="text-neutral-400 hover:text-white p-1 rounded-lg hover:bg-neutral-800 transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6 space-y-4">
+                <!-- Vehicle Select -->
+                <div>
+                    <label class="block text-xs font-bold text-neutral-300 mb-1">Selecione o Veículo</label>
+                    <select id="modalVehicleSelect" onchange="updateModalPrice()" class="w-full bg-black border border-g30-border rounded-xl p-2.5 text-xs text-white focus:border-g30-orange">
+                        <!-- Dynamic options -->
+                    </select>
+                </div>
+
+                <!-- Price and Entry -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-400 mb-1">Valor do Veículo</label>
+                        <input type="text" id="modalVehiclePrice" readonly class="w-full bg-neutral-900 border border-g30-border rounded-xl p-2.5 text-xs text-neutral-300 font-bold" value="R$ 0,00">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-300 mb-1">Valor de Entrada (R$)</label>
+                        <input type="number" id="modalEntryInput" oninput="calculateFinancing()" class="w-full bg-black border border-g30-border rounded-xl p-2.5 text-xs text-g30-orange font-bold focus:border-g30-orange" placeholder="Ex: 20000">
+                    </div>
+                </div>
+
+                <!-- Terms and Rate -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-300 mb-1">Prazo (Meses)</label>
+                        <select id="modalMonths" onchange="calculateFinancing()" class="w-full bg-black border border-g30-border rounded-xl p-2.5 text-xs text-white">
+                            <option value="12">12x</option>
+                            <option value="24">24x</option>
+                            <option value="36">36x</option>
+                            <option value="48" selected>48x</option>
+                            <option value="60">60x</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-300 mb-1">Taxa Est. (a.m %)</label>
+                        <input type="number" step="0.01" id="modalInterest" value="1.49" oninput="calculateFinancing()" class="w-full bg-black border border-g30-border rounded-xl p-2.5 text-xs text-white">
+                    </div>
+                </div>
+
+                <!-- Result Box -->
+                <div class="bg-black border border-g30-border p-4 rounded-xl space-y-2 text-center">
+                    <p class="text-xs text-neutral-400">Valor Estimado das Parcelas</p>
+                    <h4 class="text-3xl font-black text-g30-orange" id="modalResultParcel">R$ 0,00</h4>
+                    <p class="text-[11px] text-neutral-500">*Cálculo simulação com Tabela Price. Sujeito à aprovação de crédito.</p>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 bg-black border-t border-g30-border flex justify-end space-x-3">
+                <button onclick="closeFinanceModal()" class="px-4 py-2 text-xs font-bold text-neutral-400 hover:text-white">Fechar</button>
+                <button onclick="sendWhatsAppSimulation()" class="px-4 py-2 text-xs font-extrabold bg-g30-orange hover:bg-g30-orangeHover text-white rounded-xl flex items-center gap-1.5 shadow-lg shadow-g30-orange/20">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    Enviar Proposta WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-g30-border bg-black py-6">
+        <div class="max-w-7xl mx-auto px-4 text-center sm:flex sm:justify-between sm:items-center text-xs text-neutral-500">
+            <p>© 2026 JM Veículos. Padrão G30 de Qualidade.</p>
+            <p class="mt-2 sm:mt-0 flex items-center justify-center gap-2">
+                <span>Painel Gerencial de Estoque</span>
+                <span>•</span>
+                <span class="text-g30-orange font-bold">G30 Edition</span>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Data Structure for Inventory (5 Vehicles Preserved)
+        const inventory = [
+            {
+                id: 1,
+                brand: "LAND ROVER",
+                model: "DISCOVERY SPORT",
+                version: "2.0 16V TD4 TURBO DIESEL HSE 4P",
+                transmission: "AUTOMATICO",
+                fuel: "Diesel",
+                doors: 4,
+                price: 85000.00,
+                colorBadge: "border-g30-orange/40 text-g30-orange bg-g30-orange/10",
+                img: "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 2,
+                brand: "DODGE",
+                model: "JOURNEY",
+                version: "2.4 SXT I4 16V GASOLINA 4P",
+                transmission: "AUTOMATICO",
+                fuel: "Gasolina",
+                doors: 4,
+                price: 36000.00,
+                colorBadge: "border-white/30 text-white bg-white/10",
+                img: "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 3,
+                brand: "VOLKSWAGEN",
+                model: "FOX",
+                version: "1.6 MSI TOTAL FLEX CONNECT 4P",
+                transmission: "MANUAL",
+                fuel: "Flex",
+                doors: 4,
+                price: 49000.00,
+                colorBadge: "border-neutral-500/40 text-neutral-300 bg-neutral-800",
+                img: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 4,
+                brand: "MERCEDES-BENZ",
+                model: "E 250",
+                version: "2.0 VR4 16V TURBO GASOLINA 4P",
+                transmission: "AUTOMATICO",
+                fuel: "Gasolina",
+                doors: 4,
+                price: 135500.00,
+                colorBadge: "border-g30-orange/40 text-g30-orange bg-g30-orange/10",
+                img: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 5,
+                brand: "BMW",
+                model: "Z4 ROADSTER",
+                version: "2.0 16V GASOLINA 2P",
+                transmission: "MANUAL",
+                fuel: "Gasolina",
+                doors: 2,
+                price: 125000.00,
+                colorBadge: "border-white/30 text-white bg-white/10",
+                img: "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=600&q=80"
+            }
+        ];
+
+        // Format Currency Helper
+        function formatBRL(val) {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+        }
+
+        // Global State Variables
+        let currentMode = 'grid';
+        let barChartInstance = null;
+        let doughnutChartInstance = null;
+
+        // Initialize App on DOM Load
+        document.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
+            populateSimulationSelect();
+            initCharts();
+            renderVehicles();
+            
+            // Event Listeners for Filters
+            document.getElementById('searchInput').addEventListener('input', renderVehicles);
+            document.getElementById('fuelFilter').addEventListener('change', renderVehicles);
+            document.getElementById('gearFilter').addEventListener('change', renderVehicles);
+            document.getElementById('sortFilter').addEventListener('change', renderVehicles);
+        });
+
+        // Render Vehicle List (Grid / Table)
+        function renderVehicles() {
+            const searchVal = document.getElementById('searchInput').value.toLowerCase();
+            const fuelVal = document.getElementById('fuelFilter').value;
+            const gearVal = document.getElementById('gearFilter').value;
+            const sortVal = document.getElementById('sortFilter').value;
+
+            // Filter logic
+            let filtered = inventory.filter(v => {
+                const fullName = `${v.brand} ${v.model} ${v.version}`.toLowerCase();
+                const matchesSearch = fullName.includes(searchVal);
+                const matchesFuel = fuelVal === 'ALL' || v.fuel === fuelVal;
+                const matchesGear = gearVal === 'ALL' || v.transmission === gearVal;
+                return matchesSearch && matchesFuel && matchesGear;
+            });
+
+            // Sorting logic
+            if (sortVal === 'PRICE_DESC') {
+                filtered.sort((a, b) => b.price - a.price);
+            } else if (sortVal === 'PRICE_ASC') {
+                filtered.sort((a, b) => a.price - b.price);
+            }
+
+            const gridContainer = document.getElementById('vehiclesGrid');
+            const tableBody = document.getElementById('vehiclesTableBody');
+            const emptyState = document.getElementById('emptyState');
+
+            if (filtered.length === 0) {
+                gridContainer.innerHTML = '';
+                tableBody.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            // Render Grid View Cards
+            gridContainer.innerHTML = filtered.map(v => `
+                <div class="bg-black border border-g30-border hover:border-g30-orange rounded-2xl overflow-hidden flex flex-col group transition-all duration-300 hover:shadow-xl hover:shadow-g30-orange/10">
+                    <!-- Image Banner -->
+                    <div class="relative h-44 overflow-hidden bg-neutral-900">
+                        <img src="${v.img}" alt="${v.brand} ${v.model}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100" onerror="this.src='https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=600&q=80'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                        <div class="absolute top-3 left-3 flex gap-2">
+                            <span class="text-[10px] font-extrabold tracking-wider uppercase px-2.5 py-1 rounded-md backdrop-blur-md border ${v.colorBadge}">
+                                ${v.fuel}
+                            </span>
+                        </div>
+                        <div class="absolute bottom-3 left-3 right-3 flex justify-between items-end">
+                            <div>
+                                <span class="text-[11px] font-black text-g30-orange tracking-wider uppercase">${v.brand}</span>
+                                <h4 class="text-lg font-black text-white leading-tight">${v.model}</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="p-4 flex-1 flex flex-col justify-between space-y-4">
+                        <p class="text-xs text-neutral-400 leading-relaxed line-clamp-2">${v.version}</p>
+
+                        <!-- Specs Pills -->
+                        <div class="grid grid-cols-2 gap-2 text-[11px] text-neutral-200">
+                            <div class="bg-g30-darkBg px-2.5 py-1.5 rounded-lg border border-g30-border flex items-center gap-1.5">
+                                <i data-lucide="cog" class="w-3.5 h-3.5 text-g30-orange"></i>
+                                <span>${v.transmission}</span>
+                            </div>
+                            <div class="bg-g30-darkBg px-2.5 py-1.5 rounded-lg border border-g30-border flex items-center gap-1.5">
+                                <i data-lucide="door-closed" class="w-3.5 h-3.5 text-g30-orange"></i>
+                                <span>${v.doors} Portas</span>
+                            </div>
+                        </div>
+
+                        <!-- Price & Action -->
+                        <div class="pt-3 border-t border-g30-border flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] uppercase tracking-wider text-neutral-500 font-bold block">Valor Anunciado</span>
+                                <span class="text-lg font-black text-g30-orange">${formatBRL(v.price)}</span>
+                            </div>
+                            <button onclick="openFinanceModal(${v.id})" class="p-2.5 bg-g30-orange/10 hover:bg-g30-orange text-g30-orange hover:text-black rounded-xl transition-all border border-g30-orange/30 font-bold" title="Simular parcelas">
+                                <i data-lucide="calculator" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Render Table View Rows
+            tableBody.innerHTML = filtered.map(v => `
+                <tr class="hover:bg-neutral-900/60 transition-colors">
+                    <td class="p-4">
+                        <div class="font-black text-white text-sm">${v.brand} ${v.model}</div>
+                        <div class="text-[10px] text-neutral-500">${v.doors} Portas</div>
+                    </td>
+                    <td class="p-4 text-neutral-300 max-w-xs truncate">${v.version}</td>
+                    <td class="p-4">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${v.colorBadge}">${v.fuel}</span>
+                    </td>
+                    <td class="p-4 text-neutral-300">${v.transmission}</td>
+                    <td class="p-4 text-right font-black text-g30-orange text-sm">${formatBRL(v.price)}</td>
+                    <td class="p-4 text-center">
+                        <button onclick="openFinanceModal(${v.id})" class="px-3 py-1.5 bg-g30-orange/10 hover:bg-g30-orange text-g30-orange hover:text-black rounded-lg transition border border-g30-orange/30 flex items-center gap-1 mx-auto text-[11px] font-bold">
+                            <i data-lucide="calculator" class="w-3.5 h-3.5"></i> Simular
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        // Switch View Modes
+        function setModeView(mode) {
+            currentMode = mode;
+            const gridView = document.getElementById('vehiclesGrid');
+            const tableView = document.getElementById('vehiclesTableWrapper');
+            const btnGrid = document.getElementById('btnGridView');
+            const btnTable = document.getElementById('btnTableView');
+
+            if (mode === 'grid') {
+                gridView.classList.remove('hidden');
+                tableView.classList.add('hidden');
+                btnGrid.className = 'p-1.5 rounded-lg bg-g30-orange text-black font-bold transition';
+                btnTable.className = 'p-1.5 rounded-lg text-neutral-400 hover:text-white transition';
+            } else {
+                gridView.classList.add('hidden');
+                tableView.classList.remove('hidden');
+                btnTable.className = 'p-1.5 rounded-lg bg-g30-orange text-black font-bold transition';
+                btnGrid.className = 'p-1.5 rounded-lg text-neutral-400 hover:text-white transition';
+            }
+        }
+
+        // Reset Filters Helper
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('fuelFilter').value = 'ALL';
+            document.getElementById('gearFilter').value = 'ALL';
+            document.getElementById('sortFilter').value = 'DEFAULT';
+            renderVehicles();
+        }
+
+        // Initialize Chart.js in G30 Black & Orange Theme
+        function initCharts() {
+            // Chart 1: Bar Chart
+            const ctxBar = document.getElementById('priceBarChart').getContext('2d');
+            const sortedStock = [...inventory].sort((a, b) => b.price - a.price);
+            
+            barChartInstance = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: sortedStock.map(v => `${v.brand} ${v.model}`),
+                    datasets: [{
+                        label: 'Valor (R$)',
+                        data: sortedStock.map(v => v.price),
+                        backgroundColor: [
+                            '#FF5500', // G30 Orange
+                            '#FFFFFF', // White
+                            '#FF7733', // Orange Light
+                            '#D1D5DB', // Light Gray
+                            '#E04B00'  // Darker Orange
+                        ],
+                        borderRadius: 8,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#0A0A0A',
+                            borderColor: '#FF5500',
+                            borderWidth: 1,
+                            titleColor: '#FFFFFF',
+                            bodyColor: '#FF5500',
+                            callbacks: {
+                                label: function(context) {
+                                    return ' Preço: ' + formatBRL(context.raw);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#A3A3A3', font: { size: 11, weight: 'bold' } }
+                        },
+                        y: {
+                            grid: { color: '#2A2A2A' },
+                            ticks: {
+                                color: '#A3A3A3',
+                                font: { size: 11 },
+                                callback: function(value) {
+                                    return 'R$ ' + (value / 1000) + 'k';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Doughnut Chart
+            const ctxDoughnut = document.getElementById('fuelDoughnutChart').getContext('2d');
+            doughnutChartInstance = new Chart(ctxDoughnut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Gasolina', 'Diesel', 'Flex'],
+                    datasets: [{
+                        data: [3, 1, 1],
+                        backgroundColor: [
+                            '#FF5500', // Gasolina - G30 Orange
+                            '#FFFFFF', // Diesel - White
+                            '#525252'  // Flex - Dark Gray
+                        ],
+                        borderWidth: 4,
+                        borderColor: '#121212'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '72%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#0A0A0A',
+                            borderColor: '#FF5500',
+                            borderWidth: 1,
+                            titleColor: '#FFFFFF',
+                            bodyColor: '#FF5500',
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.label}: ${context.raw} veículo(s)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Simulation Modal Handlers
+        function populateSimulationSelect() {
+            const select = document.getElementById('modalVehicleSelect');
+            select.innerHTML = inventory.map(v => `
+                <option value="${v.id}">${v.brand} ${v.model} - ${formatBRL(v.price)}</option>
+            `).join('');
+        }
+
+        function openFinanceModal(vehicleId = 1) {
+            const modal = document.getElementById('financeModal');
+            const select = document.getElementById('modalVehicleSelect');
+            select.value = vehicleId;
+            
+            updateModalPrice();
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                document.getElementById('modalCard').classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeFinanceModal() {
+            const modal = document.getElementById('financeModal');
+            modal.classList.add('opacity-0');
+            document.getElementById('modalCard').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function updateModalPrice() {
+            const select = document.getElementById('modalVehicleSelect');
+            const selectedVehicle = inventory.find(v => v.id == select.value);
+            if (selectedVehicle) {
+                document.getElementById('modalVehiclePrice').value = formatBRL(selectedVehicle.price);
+                document.getElementById('modalEntryInput').value = Math.round(selectedVehicle.price * 0.2);
+                calculateFinancing();
+            }
+        }
+
+        function calculateFinancing() {
+            const select = document.getElementById('modalVehicleSelect');
+            const vehicle = inventory.find(v => v.id == select.value);
+            if (!vehicle) return;
+
+            const price = vehicle.price;
+            let entry = parseFloat(document.getElementById('modalEntryInput').value) || 0;
+            if (entry >= price) entry = price * 0.9;
+
+            const amountToFinance = price - entry;
+            const months = parseInt(document.getElementById('modalMonths').value);
+            const monthlyRate = (parseFloat(document.getElementById('modalInterest').value) || 1.49) / 100;
+
+            let monthlyPayment = 0;
+            if (amountToFinance > 0) {
+                monthlyPayment = (amountToFinance * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -months));
+            }
+
+            document.getElementById('modalResultParcel').innerText = formatBRL(monthlyPayment);
+        }
+
+        function sendWhatsAppSimulation() {
+            const select = document.getElementById('modalVehicleSelect');
+            const vehicle = inventory.find(v => v.id == select.value);
+            const parcel = document.getElementById('modalResultParcel').innerText;
+            const months = document.getElementById('modalMonths').value;
+            const entry = document.getElementById('modalEntryInput').value;
+
+            const text = encodeURIComponent(
+                `Olá, JM Veículos (Padrão G30)! Gostaria de consultar o financiamento para o veículo:\n\n` +
+                `🚗 *${vehicle.brand} ${vehicle.model}*\n` +
+                `💰 *Valor:* ${formatBRL(vehicle.price)}\n` +
+                `💵 *Entrada:* ${formatBRL(entry)}\n` +
+                `📅 *Plano:* ${months}x de ${parcel}\n\n` +
+                `Poderia verificar a aprovação de crédito?`
+            );
+
+            window.open(`https://wa.me/5511999999999?text=${text}`, '_blank');
+        }
+    </script>
+</body>
+</html>
